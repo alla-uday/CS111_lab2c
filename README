@@ -1,0 +1,294 @@
+CS111 - Project 2C: Lock Granularity and Performance  Uday Shankar Alla  404428077
+=========================================================================
+Makefile
+=========================================================================
+working targets
+default: build the executable
+clean: remove all the intermediary files created when building the executable
+dist: tarring the respective contents.
+========================================================================
+graphs
+========================================================================
+proj2c.png
+Graphed the per operation times (for each of the three synchronization options)
+vs the ratio of threads to lists. The corrected iterations used was 10000. Threads
+was held at 8 while lists ranged from 1-40 for the synchronizations. As we
+can observe from the graph spin lock does better that mutex.
+
+================================================================================
+Performance Analysis
+================================================================================
+Program with a single (huge) list (--lists=1) for a (large) range of iterations
+(--iterations=10000 and --threads=1)(without yields and lock).
+
+  %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+75.11      0.21     0.21    10000    21.03    21.03  SortedList_lookup
+25.04      0.28     0.07    10000     7.01     7.01  SortedList_insert
+ 0.00      0.28     0.00    20000     0.00     0.00  genHash
+ 0.00      0.28     0.00    10000     0.00     0.00  SortedList_delete
+ 0.00      0.28     0.00        2     0.00     0.00  SortedList_length
+ 0.00      0.28     0.00        1     0.00     0.00  genRandom
+
+(--iterations=20000 --threads=1 --lists=1)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+65.45      1.32     1.32    20000    66.10    66.10  SortedList_lookup
+33.71      2.00     0.68    20000    34.05    34.05  SortedList_insert
+ 0.50      2.01     0.01    20000     0.50     0.50  SortedList_delete
+ 0.50      2.02     0.01                             thr_func
+ 0.00      2.02     0.00    40000     0.00     0.00  genHash
+ 0.00      2.02     0.00        2     0.00     0.00  SortedList_length
+ 0.00      2.02     0.00        1     0.00     0.00  genRandom
+
+
+MUTEX SYNCHRONISATION (--iterations=10000 and --threads=7)
+
+(--lists=1)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  ms/call  ms/call  name
+69.31     20.61    20.61    69999     0.29     0.29  SortedList_lookup
+30.81     29.78     9.16    69990     0.13     0.13  SortedList_insert
+ 0.03     29.79     0.01        8     1.25     1.25  SortedList_length
+ 0.00     29.79     0.00   139966     0.00     0.00  genHash
+ 0.00     29.79     0.00    70000     0.00     0.00  SortedList_delete
+ 0.00     29.79     0.00        1     0.00     0.00  genRandom
+
+(--lists=3)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  ms/call  ms/call  name
+70.11      8.62     8.62    69319     0.12     0.12  SortedList_lookup
+29.80     12.29     3.67    69624     0.05     0.05  SortedList_insert
+ 0.24     12.32     0.03       24     1.25     1.25  SortedList_length
+ 0.00     12.32     0.00   138680     0.00     0.00  genHash
+ 0.00     12.32     0.00    69341     0.00     0.00  SortedList_delete
+ 0.00     12.32     0.00        1     0.00     0.00  genRandom
+
+(--lists=6)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+71.74      4.48     4.48    67634    66.19    66.19  SortedList_lookup
+28.09      6.23     1.75    68814    25.47    25.47  SortedList_insert
+ 0.32      6.25     0.02       48   417.30   417.30  SortedList_length
+ 0.00      6.25     0.00   136087     0.00     0.00  genHash
+ 0.00      6.25     0.00    67777     0.00     0.00  SortedList_delete
+ 0.00      6.25     0.00        1     0.00     0.00  genRandom
+
+(--lists=11)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+71.29      2.42     2.42    64864    37.37    37.37  SortedList_lookup
+27.69      3.37     0.94    67534    13.94    13.94  SortedList_insert
+ 0.59      3.39     0.02       87   230.24   230.24  SortedList_length
+ 0.59      3.41     0.02                             thr_func
+ 0.00      3.41     0.00   131577     0.00     0.00  genHash
+ 0.00      3.41     0.00    65176     0.00     0.00  SortedList_delete
+ 0.00      3.41     0.00        1     0.00     0.00  genRandom
+
+(--lists=14)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+72.23      1.94     1.94    63963    30.38    30.38  SortedList_lookup
+26.06      2.64     0.70    66729    10.51    10.51  SortedList_insert
+ 1.12      2.67     0.03      108   278.20   278.20  SortedList_length
+ 0.74      2.69     0.02   129520     0.15     0.15  genHash
+ 0.00      2.69     0.00    64213     0.00     0.00  SortedList_delete
+ 0.00      2.69     0.00        1     0.00     0.00  genRandom
+	     
+(--lists=17)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+68.69      1.55     1.55    63984    24.26    24.26  SortedList_lookup
+30.58      2.24     0.69    66141    10.45    10.45  SortedList_insert
+ 0.44      2.25     0.01      133    75.30    75.30  SortedList_length
+ 0.44      2.26     0.01                             thr_func
+ 0.00      2.26     0.00   129161     0.00     0.00  genHash
+ 0.00      2.26     0.00    64441     0.00     0.00  SortedList_delete
+ 0.00      2.26     0.00        1     0.00     0.00  genRandom
+
+(--lists=20)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+64.14      1.30     1.30    60544    21.50    21.50  SortedList_lookup
+34.54      2.00     0.70    64903    10.80    10.80  SortedList_insert
+ 0.99      2.02     0.02      159   125.98   125.98  SortedList_length
+ 0.49      2.03     0.01   123535     0.08     0.08  genHash
+ 0.00      2.03     0.00    61063     0.00     0.00  SortedList_delete
+ 0.00      2.03     0.00        1     0.00     0.00  genRandom
+
+(--lists=100)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+75.79      0.28     0.28    38796     7.23     7.23  SortedList_lookup
+24.36      0.37     0.09    49939     1.80     1.80  SortedList_insert
+ 0.00      0.37     0.00    83626     0.00     0.00  genHash
+ 0.00      0.37     0.00    39822     0.00     0.00  SortedList_delete
+ 0.00      0.37     0.00      724     0.00     0.00  SortedList_length
+ 0.00      0.37     0.00        1     0.00     0.00  genRandom
+
+SPINLOCK SYNCHRONIZATION (--iterations=10000 and --threads=7)
+
+(--lists=1)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+89.32    363.63   363.63                             thr_func
+ 8.02    396.27    32.64    69903   466.93   466.93  SortedList_lookup
+ 2.82    407.74    11.47    69191   165.74   165.74  SortedList_insert
+ 0.00    407.74     0.00   139895     0.00     0.00  genHash
+ 0.00    407.74     0.00    70000     0.00     0.00  SortedList_delete
+ 0.00    407.74     0.00        8     0.00     0.00  SortedList_length
+ 0.00    407.74     0.00        1     0.00     0.00  genRandom
+
+(--lists=3)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+59.28     27.97    27.97                             thr_func
+30.41     42.32    14.35    66039   217.32   217.32  SortedList_lookup
+10.44     47.25     4.93    64973    75.84    75.84  SortedList_insert
+ 0.02     47.26     0.01       23   435.45   435.45  SortedList_length
+ 0.00     47.26     0.00   138638     0.00     0.00  genHash
+ 0.00     47.26     0.00    69466     0.00     0.00  SortedList_delete
+ 0.00     47.26     0.00        1     0.00     0.00  genRandom
+
+(--lists=6)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+43.85      5.96     5.96                             thr_func
+40.53     11.47     5.51    60107    91.64    91.64  SortedList_lookup
+15.55     13.58     2.11    57458    36.78    36.78  SortedList_insert
+ 0.15     13.60     0.02       37   541.37   541.37  SortedList_length
+ 0.07     13.61     0.01   135358     0.07     0.07  genHash
+ 0.00     13.61     0.00    67929     0.00     0.00  SortedList_delete
+ 0.00     13.61     0.00        1     0.00     0.00  genRandom
+
+(--lists=11)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+46.11      2.50     2.50    57671    43.42    43.42  SortedList_lookup
+35.41      4.43     1.92                             thr_func
+18.08      5.41     0.98    57097    17.19    17.19  SortedList_insert
+ 0.55      5.44     0.03       77   390.21   390.21  SortedList_length
+ 0.00      5.44     0.00   129989     0.00     0.00  genHash
+ 0.00      5.44     0.00    65146     0.00     0.00  SortedList_delete
+ 0.00      5.44     0.00        1     0.00     0.00  genRandom
+
+(--lists=14)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+46.19      1.90     1.90    56143    33.89    33.89  SortedList_lookup
+33.06      3.26     1.36                             thr_func
+20.66      4.12     0.85    57650    14.77    14.77  SortedList_insert
+ 0.24      4.13     0.01       98   102.20   102.20  SortedList_length
+ 0.00      4.13     0.00   127062     0.00     0.00  genHash
+ 0.00      4.13     0.00    63588     0.00     0.00  SortedList_delete
+ 0.00      4.13     0.00        1     0.00     0.00  genRandom
+
+(--lists=17)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+49.76      1.55     1.55    56920    27.27    27.27  SortedList_lookup
+29.21      2.46     0.91                             thr_func
+20.87      3.11     0.65    57983    11.23    11.23  SortedList_insert
+ 0.32      3.12     0.01      116    86.34    86.34  SortedList_length
+ 0.00      3.12     0.00   124572     0.00     0.00  genHash
+ 0.00      3.12     0.00    62353     0.00     0.00  SortedList_delete
+ 0.00      3.12     0.00        1     0.00     0.00  genRandom
+
+(--lists=20)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+51.97      1.37     1.37    55554    24.70    24.70  SortedList_lookup
+26.18      2.06     0.69                             thr_func
+21.62      2.63     0.57    58001     9.84     9.84  SortedList_insert
+ 0.38      2.64     0.01      139    72.05    72.05  SortedList_length
+ 0.00      2.64     0.00   122025     0.00     0.00  genHash
+ 0.00      2.64     0.00    60752     0.00     0.00  SortedList_delete
+ 0.00      2.64     0.00        1     0.00     0.00  genRandom
+
+(--lists=100)
+ %   cumulative   self              self     total
+time   seconds   seconds    calls  us/call  us/call  name
+57.50      0.31     0.31    36961     8.40     8.40  SortedList_lookup
+25.97      0.45     0.14    48348     2.90     2.90  SortedList_insert
+14.84      0.53     0.08                             thr_func
+ 1.85      0.54     0.01      723    13.85    13.85  SortedList_length
+ 0.00      0.54     0.00    83441     0.00     0.00  genHash
+ 0.00      0.54     0.00    39155     0.00     0.00  SortedList_delete
+ 0.00      0.54     0.00        1     0.00     0.00  genRandom
+
+===================================================================================
+ANALYSIS
+===================================================================================
+QUESTION 2C.1A
+Explain the change in performance of the synchronized methods as a function of the
+number of threads per list.
+A)With the increase in the number of threads per list, the cost of synchronization
+  will also increase as the locks will be more frequently used. The reason for the
+  locks being more frequently used is the creation of more conflicts with
+  an increase in threads per list. Therefore larger number of threads/list will
+  lead to a larger execution time.
+
+QUESTION 2C.1B
+Explain why threads per list is a more interesting number than threads
+(for this particular measurement).
+A)threads per list is a more interesting number than threads because when threads
+  operate on seperate lists, the threads are independant of each others execution.
+  knowing the number of threads that are concurrently editing a list is more
+  useful as our interests lie in the interdependancy of threads and their
+  synchronizations. Knowing the number of threads per list also gives a better
+  view of the memory contention)
+
+QUESTION 2C.2A
+Compare the time per operation when increasing the lists value. Explain your observations.
+A)Time per operation decreases as we increase the number of lists; when we increase
+  the list number we allow for more parallelisation as threads can work concurrently
+  independantly of each other on seperate lists.
+
+QUESTION 2C.2B
+Compare the time per operation between mutex and spinlock. Explain your observations.
+A)spin lock is better. Mutexes use the queue and wastes more time with its overheads
+  of queuing and giving up the lock and then coming back to take the lock again.
+  Therefore more context switches, Unnlike in spin lock where it just sits
+  and spins waiting for the resource to be free.
+
+QUESTIONS 2C.3A
+Why must the mutex be held when pthread_cond_wait is called?
+A)The mutex must be held when pthread_cond_wait is called so that the thread is not
+  interrupted by a signal while still processing. Also if the mutex isnt held then
+  other threads can also change the condition variable. Moreover, if mutex isnt held
+  a deadlock can occur as multiple threads can end up waiting on each other hence
+  sleeping forever.
+  
+QUESTION 2C.3B
+Why must the mutex be released when the waiting thread is blocked?
+A)If the mutex isn't released, other threads can't change condition variable and hence
+  never wake up. Moreover, the mutex must be released so that the signalling function
+  pthread_cond_signal can inform when the thread must wake up and then the thread can
+  acquire the lock and proceed.
+  
+QUESTION 2C.3C
+Why must the mutex be reacquired when the calling thread resumes?
+A)Since the thread has woken up it must reacquire the mutex so that other threads dont
+  simultaneously process the critical section along with current thread. Therefore to
+  enable mutual exclusion the mutex must be acquire when the thread wakes up.
+  
+QUESTION 2C.3D
+Why must mutex release be done inside of pthread_cond_wait?
+Why can't the caller simply release the mutex before calling pthread_cond_wait?
+A)This is done to ensure that both these instructions are atomically executed. If the
+  mutex were to be released before calling pthread_cond_wait, then other threads can
+  can end up locking the mutex, causing undefined behavior for pthread_cond_wait.
+  For example, If one thread is preempted and child runs, changes condition variable
+  before we sleep and then it preempts back it could result in the thread sleeping
+  forever.
+
+QUESTION 2C.3E
+Can pthread_cond_wait be implemented in user mode?  If so, how?
+If it can only be implemented by a system call, explain why?
+A)As a user program, atomicity and continuity is not guaranteed(i.e no interrupts).
+  However, if this program is implemented by a system call, we can control concurrency
+  and interruption to ensure the prevention of undefined behavior/deadlocks etc. 
+
+
+
+
